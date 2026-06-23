@@ -1,8 +1,11 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, Response
+from flask import Flask, render_template, request, redirect, url_for, flash, Response, session
 import os
 import sqlite3
 import csv
 import io
+import requests
+
+URL_GOOGLE_SHEETS = "https://script.google.com/macros/s/AKfycbwGieoSUwVyiPvtnMiys_N7IreL8vHVtRMY_m0UDPm_gw5S8_OBmVXHcKR9Zxm9NUL0/exec"
 
 app = Flask(__name__)
 app.secret_key = 'cibiogen_secreto_clave'
@@ -86,6 +89,20 @@ def registrar_individual():
             )
             conn.commit()
 
+        # --- ENVÍO A GOOGLE SHEETS (INDIVIDUAL) ---
+        payload_individual = {
+            "pago_id": pago_id,
+            "nombre": nombre,
+            "codigo": codigo,
+            "dni": dni,
+            "estado": "pendiente"
+        }
+        try:
+            requests.post(URL_GOOGLE_SHEETS, json=payload_individual, timeout=5)
+        except Exception as e:
+            print(f"Error al enviar a Google Sheets: {e}")
+        # ------------------------------------------
+
         flash('¡Inscripción recibida con éxito! El moderador revisará tu voucher.', 'exito')
         return redirect(url_for('inicio'))
 
@@ -110,13 +127,33 @@ def registrar_grupal():
                 'INSERT INTO pagos (tipo_pago, ruta_voucher) VALUES (?, ?)', (2, nombre_archivo)
             )
             pago_id = cursor.lastrowid
+            
+            lista_integrantes = []
             for i in range(len(nombres)):
                 if nombres[i].strip():
                     conn.execute(
                         'INSERT INTO inscritos (pago_id, nombre, codigo, dni) VALUES (?, ?, ?, ?)',
                         (pago_id, nombres[i], codigos[i], dnis[i])
                     )
+                    # Almacenamos en lista para enviarlo en bloque a Google Sheets
+                    lista_integrantes.append({
+                        "nombre": nombres[i],
+                        "codigo": codigos[i],
+                        "dni": dnis[i]
+                    })
             conn.commit()
+
+        # --- ENVÍO A GOOGLE SHEETS (GRUPAL) ---
+        payload_grupal = {
+            "pago_id": pago_id,
+            "estado": "pendiente",
+            "integrantes": lista_integrantes
+        }
+        try:
+            requests.post(URL_GOOGLE_SHEETS, json=payload_grupal, timeout=5)
+        except Exception as e:
+            print(f"Error al enviar a Google Sheets: {e}")
+        # ----------------------------------------
 
         flash('¡Inscripción grupal recibida! El moderador verificará el voucher del grupo.', 'exito')
         return redirect(url_for('inicio'))
@@ -141,14 +178,32 @@ def verificar_codigo():
     return render_template('conper.html', resultado=resultado, busqueda=True)
 
 
+# ---- CONTROL DE ACCESO / LOGIN SEGURIZADO ----
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        password_ingresada = request.form.get('password')
+        if password_ingresada == CLAVE_SECRETA_MODERADOR:
+            session['moderador_autenticado'] = True
+            return redirect(url_for('panel_moderador'))
+        else:
+            return render_template('login.html', error="❌ Contraseña incorrecta. Intente de nuevo.")
+    return render_template('login.html', error=None)
+
+@app.route('/logout')
+def logout():
+    session.pop('moderador_autenticado', None)
+    return redirect(url_for('inicio'))
+
+
 # ---- PANEL MODERADOR ----
 
-# 1. Ver panel
+# 1. Ver panel (Protegido por Sesión)
 @app.route('/moderador')
 def panel_moderador():
-    clave = request.args.get('clave')
-    if clave != CLAVE_SECRETA_MODERADOR:
-        return "<h1>Acceso Denegado: Contraseña incorrecta o ausente.</h1>", 403
+    if not session.get('moderador_autenticado'):
+        return "<h1>Acceso Denegado: Debe iniciar sesión primero.</h1><br><a href='/login'>Ir al Login</a>", 403
 
     with conectar_db() as conn:
         lista = conn.execute('''
@@ -159,14 +214,13 @@ def panel_moderador():
             ORDER BY pagos.id DESC
         ''').fetchall()
 
-    return render_template('moderador.html', lista=lista, clave=CLAVE_SECRETA_MODERADOR)
+    return render_template('moderador.html', lista=lista)
 
 
 # 2. Aprobar / Rechazar pago
 @app.route('/moderador/cambiar_estado', methods=['POST'])
 def cambiar_estado():
-    clave = request.form.get('clave')
-    if clave != CLAVE_SECRETA_MODERADOR:
+    if not session.get('moderador_autenticado'):
         return "<h1>Acceso Denegado.</h1>", 403
 
     pago_id = request.form.get('pago_id')
@@ -176,14 +230,13 @@ def cambiar_estado():
         conn.execute('UPDATE pagos SET estado = ? WHERE id = ?', (nuevo_estado, pago_id))
         conn.commit()
 
-    return redirect(f'/moderador?clave={CLAVE_SECRETA_MODERADOR}')
+    return redirect(url_for('panel_moderador'))
 
 
 # 3. Descargar CSV completo
 @app.route('/moderador/descargar')
 def descargar_excel():
-    clave = request.args.get('clave')
-    if clave != CLAVE_SECRETA_MODERADOR:
+    if not session.get('moderador_autenticado'):
         return "<h1>Acceso Denegado.</h1>", 403
 
     with conectar_db() as conn:
