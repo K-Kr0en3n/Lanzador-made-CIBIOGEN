@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CIBIOGEN - Acceso Moderador</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>CIBIOGEN</h1>
+            <h2>Acceso Restringido</h2>
+        </header>
+        <main>
+            <form action="/login" method="POST">
+                <section class="section-box">
+                    <h3>Ingrese la Contraseña de Administrador</h3>
+                    <div class="form-group">
+                        <input type="password" name="password" required placeholder="Contraseña" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc; box-sizing: border-box;">
+                    </div>
+                    
+                    {% if error %}
+                        <p style="color: #c0392b; font-weight: bold; text-align: center; margin-top: 10px;">{{ error }}</p>
+                    {% endif %}
+                </section>
+
+                <button type="submit" class="btn btn-secondary" style="width: 100%; margin-top: 10px;">Entrar al Panel</button>
+                <a href="/" class="btn-back" style="display: block; text-align: center; margin-top: 15px;">← Volver al inicio</a>
+            </form>
+        </main>
+    </div>
+</body>
+</html>
