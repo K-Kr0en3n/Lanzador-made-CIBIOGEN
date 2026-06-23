@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CIBIOGEN - Registro Individual</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>CIBIOGEN</h1>
+            <h2>Inscripción Individual</h2>
+        </header>
+        <main>
+            <form action="/registrar_individual" method="POST" enctype="multipart/form-data">
+                <section class="section-box">
+                    <h3>Ingrese sus Datos</h3>
+                    <div class="form-group">
+                        <label>Nombre Completo:</label>
+                        <input type="text" name="nombre" required placeholder="Ej. Juan Pérez">
+                    </div>
+                    <div class="form-group">
+                        <label>Código de Estudiante:</label>
+                        <input type="text" name="codigo" required placeholder="Ej. 20261234">
+                    </div>
+                    <div class="form-group">
+                        <label>DNI / Documento:</label>
+                        <input type="text" name="dni" required placeholder="Ej. 75432189">
+                    </div>
+                </section>
+
+                <section class="section-box">
+                    <h3>Suba su voucher</h3>
+                    <p class="help-text">Suba una sola foto nítida del comprobante de pago.</p>
+                    <input type="file" name="voucher" accept="image/*" required>
+                </section>
+
+                <button type="submit" class="btn btn-primary">Enviar para verificación</button>
+                <a href="/" class="btn-back">← Volver al inicio</a>
+            </form>
+        </main>
+    </div>
+</body>
+</html>

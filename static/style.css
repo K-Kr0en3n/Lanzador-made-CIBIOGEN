@@ -1,0 +1,72 @@
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background-color: #f4f7f6;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 90vh;
+}
+
+.container {
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    max-width: 500px;
+    width: 100%;
+    text-align: center;
+}
+
+/* Contenedor más ancho para cuando haya tablas */
+.container.wide {
+    max-width: 800px;
+}
+
+header h1 { color: #2c3e50; margin: 0 0 5px 0; font-size: 2.3rem; }
+header h2 { color: #16a085; font-size: 1.1rem; font-weight: 400; margin: 0 0 25px 0; }
+
+.section-box {
+    margin-bottom: 20px;
+    padding: 20px;
+    border: 1px solid #eef2f1;
+    border-radius: 8px;
+    background-color: #fbfcfc;
+    text-align: left;
+}
+
+.section-box h3 { margin-top: 0; color: #34495e; font-size: 1.1rem; }
+
+/* Formularios */
+.form-group { margin-bottom: 15px; }
+.form-group label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.9rem; }
+input[type="text"], input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+}
+
+/* Tablas */
+.table-responsive { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+table th, table td { padding: 8px; border: 1px solid #ddd; text-align: center; }
+table th { background-color: #f2f2f2; font-size: 0.9rem; }
+table td input { width: 100%; padding: 6px; border: 1px solid #eee; }
+
+/* Botones */
+.btn {
+    display: block; width: 100%; padding: 12px; margin: 10px 0;
+    border: none; border-radius: 6px; font-size: 1rem; font-weight: bold;
+    cursor: pointer; text-decoration: none; text-align: center; box-sizing: border-box;
+}
+.btn-primary { background: #16a085; color: white; }
+.btn-primary:hover { background: #117a65; }
+.btn-secondary { background: #34495e; color: white; }
+.btn-secondary:hover { background: #2c3e50; }
+.btn-back { display: inline-block; margin-top: 15px; color: #7f8c8d; text-decoration: none; font-size: 0.9rem; }
+.btn-back:hover { color: #333; }
+.help-text { font-size: 0.85rem; color: #7f8c8d; margin-top: -5px; margin-bottom: 10px; }

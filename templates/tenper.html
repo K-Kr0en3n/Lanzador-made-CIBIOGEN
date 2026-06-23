@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CIBIOGEN - Registro Grupal</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container wide"> <header>
+            <h1>CIBIOGEN</h1>
+            <h2>Inscripción Grupal (10 Personas)</h2>
+        </header>
+        <main>
+            <form action="/registrar_grupal" method="POST" enctype="multipart/form-data">
+                <section class="section-box">
+                    <h3>Ingrese los Datos de los 10 Participantes</h3>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>N°</th>
+                                    <th>Nombre Completo</th>
+                                    <th>Código</th>
+                                    <th>DNI</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td><input type="text" name="nombres[]" required placeholder="Participante 1"></td>
+                                    <td><input type="text" name="codigos[]" required placeholder="Código"></td>
+                                    <td><input type="text" name="dnis[]" required placeholder="DNI"></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td><input type="text" name="nombres[]" required placeholder="Participante 2"></td>
+                                    <td><input type="text" name="codigos[]" required placeholder="Código"></td>
+                                    <td><input type="text" name="dnis[]" required placeholder="DNI"></td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td><input type="text" name="nombres[]" required placeholder="Participante 3"></td>
+                                    <td><input type="text" name="codigos[]" required placeholder="Código"></td>
+                                    <td><input type="text" name="dnis[]" required placeholder="DNI"></td>
+                                </tr>
+                                <tr>
+                                    <td>4</td>
+                                    <td><input type="text" name="nombres[]" required placeholder="Participante 4"></td>
+                                    <td><input type="text" name="codigos[]" required placeholder="Código"></td>
+                                    <td><input type="text" name="dnis[]" required placeholder="DNI"></td>
+                                </tr>
+                                <tr>
+                                    <td>5</td>
+                                    <td><input type="text" name="nombres[]" required placeholder="Participante 5"></td>
+                                    <td><input type="text" name="codigos[]" required placeholder="Código"></td>
+                                    <td><input type="text" name="dnis[]" required placeholder="DNI"></td>
+                                </tr>
+                                <tr>
+                                    <td>6</td>
+                                    <td><input type="text" name="nombres[]" required placeholder="Participante 6"></td>
+                                    <td><input type="text" name="codigos[]" required placeholder="Código"></td>
+                                    <td><input type="text" name="dnis[]" required placeholder="DNI"></td>
+                                </tr>
+                                <tr>
+                                    <td>7</td>
+                                    <td><input type="text" name="nombres[]" required placeholder="Participante 7"></td>
+                                    <td><input type="text" name="codigos[]" required placeholder="Código"></td>
+                                    <td><input type="text" name="dnis[]" required placeholder="DNI"></td>
+                                </tr>
+                                <tr>
+                                    <td>8</td>
+                                    <td><input type="text" name="nombres[]" required placeholder="Participante 8"></td>
+                                    <td><input type="text" name="codigos[]" required placeholder="Código"></td>
+                                    <td><input type="text" name="dnis[]" required placeholder="DNI"></td>
+                                </tr>
+                                <tr>
+                                    <td>9</td>
+                                    <td><input type="text" name="nombres[]" required placeholder="Participante 9"></td>
+                                    <td><input type="text" name="codigos[]" required placeholder="Código"></td>
+                                    <td><input type="text" name="dnis[]" required placeholder="DNI"></td>
+                                </tr>
+                                <tr>
+                                    <td>10</td>
+                                    <td><input type="text" name="nombres[]" required placeholder="Participante 10"></td>
+                                    <td><input type="text" name="codigos[]" required placeholder="Código"></td>
+                                    <td><input type="text" name="dnis[]" required placeholder="DNI"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section class="section-box">
+                    <h3>Suba el voucher del grupo</h3>
+                    <p class="help-text">Un solo voucher que valide el pago de las 10 inscripciones.</p>
+                    <input type="file" name="voucher" accept="image/*" required>
+                </section>
+
+                <button type="submit" class="btn btn-primary">Enviar Inscripción Grupal</button>
+                <a href="/" class="btn-back">← Volver al inicio</a>
+            </form>
+        </main>
+    </div>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CIBIOGEN - Panel de Moderación</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .badge { padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 0.85rem; }
+        .badge-pendiente { background-color: #f39c12; color: white; }
+        .badge-aprobado { background-color: #2cc771; color: white; }
+        .badge-rechazado { background-color: #e74c3c; color: white; }
+        .btn-action { padding: 5px 10px; margin: 2px; border: none; border-radius: 4px; cursor: pointer; color: white; font-weight: bold; }
+        .btn-approve { background-color: #27ae60; }
+        .btn-reject { background-color: #c0392b; }
+        .btn-download { background-color: #2980b9; display: inline-block; margin-bottom: 15px; width: auto; padding: 10px 20px; }
+    </style>
+</head>
+<body>
+    <div class="container wide">
+        <header>
+            <h1>CIBIOGEN</h1>
+            <h2>Panel de Control del Moderador</h2>
+        </header>
+        <main>
+            <a href="/moderador/descargar?clave={{ clave }}" class="btn btn-download">📊 Descargar Base de Datos (Excel/CSV)</a>
+
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID Pago</th>
+                            <th>Datos del Inscrito</th>
+                            <th>Tipo</th>
+                            <th>Voucher</th>
+                            <th>Estado Actual</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for fila in lista %}
+                        <tr>
+                            <td>#{{ fila['pago_id'] }}</td>
+                            <td style="text-align: left;">
+                                <strong>Nombre:</strong> {{ fila['nombre'] }}<br>
+                                <strong>Código:</strong> {{ fila['codigo'] }}<br>
+                                <strong>DNI:</strong> {{ fila['dni'] }}
+                            </td>
+                            <td>{{ "Individual" if fila['tipo_pago'] == 1 else "Grupal" }}</td>
+                            <td>
+                                <a href="{{ url_for('static', filename='vouchers/' + fila['ruta_voucher']) }}" target="_blank">📄 Ver Voucher</a>
+                            </td>
+                            <td>
+                                <span class="badge badge-{{ fila['estado'] }}">{{ fila['estado'].upper() }}</span>
+                            </td>
+                            <td>
+                                {% if fila['estado'] == 'pendiente' %}
+                                    <form action="/moderador/cambiar_estado" method="POST" style="display:inline;">
+                                        <input type="hidden" name="clave" value="{{ clave }}">
+                                        <input type="hidden" name="pago_id" value="{{ fila['pago_id'] }}">
+                                        <input type="hidden" name="nuevo_estado" value="aprobado">
+                                        <button type="submit" class="btn-action btn-approve">✓ Aprobar</button>
+                                    </form>
+                                    <form action="/moderador/cambiar_estado" method="POST" style="display:inline;">
+                                        <input type="hidden" name="clave" value="{{ clave }}">
+                                        <input type="hidden" name="pago_id" value="{{ fila['pago_id'] }}">
+                                        <input type="hidden" name="nuevo_estado" value="rechazado">
+                                        <button type="submit" class="btn-action btn-reject">✗ Rechazar</button>
+                                    </form>
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <a href="/" class="btn-back" style="display: block; margin-top: 20px;">← Volver al inicio público</a>
+        </main>
+    </div>
+</body>
+</html>

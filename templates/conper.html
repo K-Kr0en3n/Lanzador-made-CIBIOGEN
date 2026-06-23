@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CIBIOGEN - Consultar Estado</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>CIBIOGEN</h1>
+            <h2>Verificación de Inscripción</h2>
+        </header>
+        <main>
+            <form action="/verificar_codigo" method="POST">
+                <section class="section-box">
+                    <h3>Ingrese su código de estudiante o DNI</h3>
+                    <div class="form-group">
+                        <input type="text" name="codigo_busqueda" required placeholder="Ej. 20261234">
+                    </div>
+                </section>
+                <button type="submit" class="btn btn-secondary">Verificar Estado</button>
+            </form>
+
+            {% if busqueda %}
+                <div class="section-box" style="margin-top: 20px; text-align: center;">
+                    {% if resultado %}
+                        <h3>Hola, {{ resultado['nombre'] }}</h3>
+                        {% if resultado['estado'] == 'pendiente' %}
+                            <p style="color: #d35400; font-weight: bold; font-size: 1.2rem;">⏳ Su inscripción está en proceso de verificación.</p>
+                        {% elif resultado['estado'] == 'aprobado' %}
+                            <p style="color: #27ae60; font-weight: bold; font-size: 1.2rem;">✅ ¡INSCRIPCIÓN CORRECTA!</p>
+                        {% else %}
+                            <p style="color: #c0392b; font-weight: bold; font-size: 1.2rem;">❌ Voucher Rechazado. Contacte a soporte.</p>
+                        {% endif %}
+                    {% else %}
+                        <p style="color: #c0392b; font-weight: bold;">❌ Código o DNI no encontrado en el sistema.</p>
+                    {% endif %}
+                </div>
+            {% endif %}
+
+            <a href="/" class="btn-back">← Volver al inicio</a>
+        </main>
+    </div>
+</body>
+</html>

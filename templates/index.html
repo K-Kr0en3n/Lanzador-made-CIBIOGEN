@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CIBIOGEN - Inicio</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>CIBIOGEN</h1>
+            <h2>Convención Anual de Estudiantes de Biología</h2>
+        </header>
+        <main>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <section class="section-box">
+                <h3>Elija la opción con la que quiere inscribirse</h3>
+                <a href="/unaper" class="btn btn-primary">Opción 1 (Solo una persona)</a>
+                <a href="/tenper" class="btn btn-primary">Opción 2 (10 personas)</a>
+            </section>
+            <section class="section-box">
+                <h3>¿Ya se inscribió y está esperando?</h3>
+                <a href="/conper" class="btn btn-secondary">Consultarlo aquí</a>
+            </section>
+        </main>
+    </div>
+    <a href="/moderador?clave=kevin123" style="position: fixed; bottom: 10px; right: 10px; color: #bdc3c7; text-decoration: none; font-size: 0.75rem;">⚙️</a>
+</body>
+</html>
